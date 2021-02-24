@@ -28,7 +28,10 @@ export const fetch = async (targetUri, options = { headers: {} }) => {
     });
   targetURL.search = new URLSearchParams(options.query);
 
-  const opts = Object.assign({}, options, { body, credentials: "include" });
+  const opts = Object.assign({}, options, {
+    body,
+    credentials: options.credentials || "include",
+  });
   let json = {};
   let status;
   let headers = {};
