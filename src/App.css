@@ -1,5 +1,38 @@
 .App {
   text-align: center;
+  max-width: 920px;
+  animation-delay: 0.2s;
+  animation-fill-mode: backwards;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-width: 920px;
+  width: 100%;
+}
+
+.App-container {
+  display: flex;
+  justify-content: center;
+}
+.App-background {
+  background-color: #282c34;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: -1;
+}
+.App-container:before {
+  height: 100%;
+  width: 50%;
+  background: #fff;
+  position: fixed;
+  content: " ";
+  top: 0;
+  right: 0;
+  animation-fill-mode: both;
+  transform-origin: right;
 }
 
 .App-logo {
@@ -14,25 +47,26 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: 22px;
   color: white;
+  width: 50%;
+}
+.App-form {
+  padding: 20px;
+  width: 50%;
 }
 
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+@media only screen and (min-width: 992px) {
+  .App {
+    align-items: flex-start;
+    transform: translateY(max(48px, calc(50vh - 55%)));
   }
 }
