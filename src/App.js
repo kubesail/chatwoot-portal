@@ -1,5 +1,6 @@
 import "./App.css";
 import Login from "./Login";
+import Settings from "./Settings";
 import { useState, useEffect } from "react";
 import { fetch } from "./util";
 
@@ -41,14 +42,12 @@ function App() {
           {platform && <img src={platform.logo} />}
           {profile && (
             <div>
-              <div>{profile.customer.email}</div>
-              <div>{profile.customer.stripeCustomerId}</div>
+              <div>{profile?.customer?.email}</div>
+              <div>{profile?.customer?.stripeCustomerId}</div>
             </div>
           )}
         </div>
-        <div className="App-form">
-          <Login />
-        </div>
+        <div className="App-form">{profile ? <Settings /> : <Login />}</div>
       </div>
     </div>
   );
