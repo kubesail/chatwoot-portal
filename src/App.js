@@ -39,7 +39,12 @@ function App() {
         <div className="App-header">
           <h2>{platform ? platform.name : "platform not found..."}</h2>
           {platform && <img src={platform.logo} />}
-          <p>Profile: {JSON.stringify(profile)}</p>
+          {profile && (
+            <div>
+              <div>{profile.customer.email}</div>
+              <div>{profile.customer.stripeCustomerId}</div>
+            </div>
+          )}
         </div>
         <div className="App-form">
           <Login />
