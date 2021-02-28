@@ -69,30 +69,31 @@ export const fetch = async (targetUri, options = { headers: {} }) => {
   return { status, json, headers };
 };
 
-// export const toast = (opts) => {
-//   const toastStack = store.getState().toastStack;
-//   if (typeof opts !== "object")
-//     throw new Error("Toast must be called with object params");
-//   const { type = "info", msg, subMsg, err = null, timeout = 8000 } = opts;
-//   const persistent = type === "error" || opts.persistent;
-//   if (type === "error" && err)
-//     console.error("Toast Error | " + msg + " | " + err !== msg ? err : "");
-//   const id = Math.random();
-//   store.dispatch({
-//     type: "TOAST",
-//     toastStack: [...toastStack, { type, msg, subMsg, id, persistent }],
-//   });
-//   if (!persistent) {
-//     window.setTimeout(() => {
-//       const toastStack = store.getState().toastStack;
-//       store.dispatch({
-//         type: "TOAST",
-//         toastStack: toastStack.filter((toast) => toast.id !== id),
-//       });
-//     }, timeout);
-//   }
-//   return id;
-// };
+export const toast = (opts) => {
+  window.alert(opts?.msg);
+  // const toastStack = store.getState().toastStack;
+  // if (typeof opts !== "object")
+  //   throw new Error("Toast must be called with object params");
+  // const { type = "info", msg, subMsg, err = null, timeout = 8000 } = opts;
+  // const persistent = type === "error" || opts.persistent;
+  // if (type === "error" && err)
+  //   console.error("Toast Error | " + msg + " | " + err !== msg ? err : "");
+  // const id = Math.random();
+  // store.dispatch({
+  //   type: "TOAST",
+  //   toastStack: [...toastStack, { type, msg, subMsg, id, persistent }],
+  // });
+  // if (!persistent) {
+  //   window.setTimeout(() => {
+  //     const toastStack = store.getState().toastStack;
+  //     store.dispatch({
+  //       type: "TOAST",
+  //       toastStack: toastStack.filter((toast) => toast.id !== id),
+  //     });
+  //   }, timeout);
+  // }
+  // return id;
+};
 
 // Solution for rendering props into react-router components comes from
 // https://github.com/ReactTraining/react-router/issues/4105#issuecomment-289195202

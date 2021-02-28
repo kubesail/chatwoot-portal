@@ -12,26 +12,27 @@ try {
 function App() {
   const [profile, setProfile] = useState(null);
   const [platform, setPlatform] = useState(null);
+
+  async function fetchProfile() {
+    let { json, status } = await fetch("/platform/customer/profile");
+    if (status !== 200) {
+      return setProfile(null);
+    }
+    setProfile(json);
+  }
+
+  async function fetchPublicPlatform() {
+    let { json, status } = await fetch("/platform", {
+      query: { origin: originOverride },
+      credentials: "omit",
+    });
+    setPlatform(json);
+  }
+
   useEffect(() => {
-    async function fetchProfile() {
-      let { json, status } = await fetch("/platform/customer/profile");
-      setProfile(json);
-    }
-    async function fetchPublicPlatform() {
-      let { json, status } = await fetch("/platform", {
-        query: { origin: originOverride },
-        credentials: "omit",
-      });
-      setPlatform(json);
-    }
     fetchPublicPlatform();
     fetchProfile();
   }, []);
-
-  const login = function (e) {
-    e.preventDefault();
-    console.log("Submitted");
-  };
 
   return (
     <div className="App-container">
@@ -47,7 +48,13 @@ function App() {
             </div>
           )}
         </div>
-        <div className="App-form">{profile ? <Settings /> : <Login />}</div>
+        <div className="App-form">
+          {profile ? (
+            <Settings variableMetadata={platform.plans[0].variableMetadata} />
+          ) : (
+            <Login />
+          )}
+        </div>
       </div>
     </div>
   );

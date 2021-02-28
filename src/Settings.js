@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { fetch } from "./util";
 
-function Settings() {
+function Settings({ variableMetadata = {} }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [action, setAction] = useState("Settings");
@@ -18,47 +18,26 @@ function Settings() {
   return (
     <div className="Settings">
       <form onSubmit={updateSettings}>
-        <div className="input">
-          <input
-            type="text"
-            name="email"
-            placeholder="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <label htmlFor="password" className="input-label">
-            Password
-          </label>
-        </div>
-        <div className="input">
-          <input
-            id="password"
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <label htmlFor="password" className="input-label">
-            Password
-          </label>
-        </div>
+        {Object.keys(variableMetadata).map((variable) => {
+          return (
+            <div className="input">
+              {variable}
+              <input
+                type="text"
+                id={variable}
+                name={variable}
+                placeholder={variableMetadata[variable]}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <label htmlFor="password" className="input-label">
+                {variable}
+              </label>
+            </div>
+          );
+        })}
 
-        <button type="submit">
-          {action === "register" ? "Sign Up" : "Settings"}
-        </button>
-
-        {action === "register" ? (
-          <div>
-            Already have an account?{" "}
-            <a onClick={() => setAction("Settings")}>Settings</a>
-          </div>
-        ) : (
-          <div>
-            Need an account?{" "}
-            <a onClick={() => setAction("register")}>Sign Up</a>
-          </div>
-        )}
+        <button type="submit">Save</button>
       </form>
     </div>
   );
