@@ -1,38 +1,54 @@
-// import "./Login.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { fetch } from "./util";
 
-function Login() {
+function Login({ setLoggedIn }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [action, setAction] = useState("login");
+  const [action, setAction] = useState("register");
+  const [formError, setFormError] = useState("");
+  const [loggingIn, setLoggingIn] = useState(false);
+  const [fieldError, setFieldError] = useState("");
 
-  const login = async function (e) {
-    e.preventDefault();
-    await fetch("/platform/customer/login", {
-      method: "POST",
-      body: { email, password },
-    });
-  };
+  const login = async function (register = false) {
+    if (loggingIn) return;
+    if (!email) return setFieldError("email");
+    else if (!password) return setFieldError("password");
+    else setFieldError("");
 
-  const register = async function (e) {
-    e.preventDefault();
-    await fetch("/platform/customer/register", {
-      method: "POST",
-      body: { email, password },
-    });
+    setLoggingIn(true);
+    const { json } = await fetch(
+      `/platform/customer/${register ? "register" : "login"}`,
+      {
+        method: "POST",
+        body: { email, password },
+      }
+    );
+    if (json && json.error) {
+      setFormError(json.error);
+    } else {
+      setFormError("");
+      setLoggedIn(true);
+    }
+    setLoggingIn(false);
   };
 
   return (
     <div className="Login">
-      <form onSubmit={action === "login" ? login : register}>
+      <div>{action === "login" ? "Login" : "Register"}</div>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          login(action === "register");
+        }}
+      >
         <div className="input">
           <input
             type="text"
             name="email"
-            placeholder="email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className={fieldError === "email" ? "error" : ""}
           />
           <label htmlFor="password" className="input-label">
             Password
@@ -46,28 +62,40 @@ function Login() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className={fieldError === "password" ? "error" : ""}
           />
           <label htmlFor="password" className="input-label">
             Password
           </label>
         </div>
 
-        <button type="submit">
-          {action === "register" ? "Sign Up" : "Login"}
-        </button>
+        {formError ? <div className="form-error">{formError}</div> : null}
 
-        {action === "register" ? (
-          <div>
-            Already have an account?{" "}
-            <a onClick={() => setAction("login")}>Login</a>
-          </div>
-        ) : (
-          <div>
-            Need an account?{" "}
-            <a onClick={() => setAction("register")}>Sign Up</a>
-          </div>
-        )}
+        <div>
+          <button className="button" type="submit">
+            {loggingIn
+              ? "Working..."
+              : action === "register"
+              ? "Sign Up"
+              : "Login"}
+          </button>
+        </div>
       </form>
+      <div>
+        {action === "register"
+          ? "Already have an account?"
+          : "Need an account?"}
+        <button
+          className="plain"
+          onClick={() => {
+            setFieldError("");
+            setFormError("");
+            setAction(action === "register" ? "login" : "register");
+          }}
+        >
+          {action === "register" ? "Login" : "Sign Up"}
+        </button>
+      </div>
     </div>
   );
 }

@@ -2,17 +2,15 @@
 import { useState, useEffect } from "react";
 import { fetch } from "./util";
 
-function Settings({ variableMetadata = {} }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [action, setAction] = useState("Settings");
+function Settings({ logout, variableMetadata = {} }) {
+  // const [email, setEmail] = useState("");
 
   const updateSettings = async function (e) {
     e.preventDefault();
-    await fetch("/platform/customer/register", {
-      method: "POST",
-      body: { email, password },
-    });
+    // await fetch("/platform/customer/register", {
+    //   method: "POST",
+    //   body: { email, password },
+    // });
   };
 
   return (
@@ -20,15 +18,15 @@ function Settings({ variableMetadata = {} }) {
       <form onSubmit={updateSettings}>
         {Object.keys(variableMetadata).map((variable) => {
           return (
-            <div className="input">
+            <div className="input" key={variable}>
               {variable}
               <input
                 type="text"
                 id={variable}
                 name={variable}
                 placeholder={variableMetadata[variable]}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                // value={password}
+                // onChange={(e) => setPassword(e.target.value)}
               />
               <label htmlFor="password" className="input-label">
                 {variable}
@@ -37,8 +35,15 @@ function Settings({ variableMetadata = {} }) {
           );
         })}
 
-        <button type="submit">Save</button>
+        <button className="plain" type="submit">
+          Save
+        </button>
       </form>
+      <div className="logout">
+        <button className="plain" onClick={logout}>
+          Log out
+        </button>
+      </div>
     </div>
   );
 }

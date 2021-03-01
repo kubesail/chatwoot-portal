@@ -55,6 +55,17 @@
   color: white;
   width: 50%;
 }
+
+.App-header .profile {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #adb0b7;
+}
+
+.App-header img {
+  margin-top: 20px;
+}
+
 .App-form {
   padding: 20px;
   width: 50%;
@@ -62,6 +73,14 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.logout {
+  font-size: 10px;
+  margin-top: 20px;
+}
+.logout button {
+  color: #adb0b7;
 }
 
 @media only screen and (min-width: 992px) {

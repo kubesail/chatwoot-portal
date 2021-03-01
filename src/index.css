@@ -44,13 +44,23 @@ a {
 }
 
 button {
+  padding: none;
+  border: none;
+  cursor: pointer;
+  margin: 10px auto;
+}
+
+button.plain {
+  background-color: unset;
+}
+
+button.button {
   padding: var(--input-padding);
   border: none;
   width: 100%;
   max-width: 280px;
   margin: 20px;
   border-radius: var(--input-border-radius);
-  cursor: pointer;
 }
 
 .input input::placeholder {
@@ -94,4 +104,12 @@ button {
   opacity: 1;
   transform: translate3d(0, var(--labelTransformedPosY), 0) scale(0.8);
   transition: transform var(--duration), visibility 0ms, z-index 0ms;
+}
+
+.form-error {
+  color: red;
+}
+
+.Login input.error {
+  border-color: red;
 }

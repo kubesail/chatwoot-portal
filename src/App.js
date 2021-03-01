@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import "./App.css";
 import Login from "./Login";
 import Settings from "./Settings";
@@ -12,6 +13,9 @@ try {
 function App() {
   const [profile, setProfile] = useState(null);
   const [platform, setPlatform] = useState(null);
+  const [isLoggedIn, setLoggedIn] = useState(
+    Cookies.get("kubesail-platform-customer")
+  );
 
   async function fetchProfile() {
     let { json, status } = await fetch("/platform/customer/profile");
@@ -31,28 +35,33 @@ function App() {
 
   useEffect(() => {
     fetchPublicPlatform();
-    fetchProfile();
-  }, []);
+    if (isLoggedIn) fetchProfile();
+  }, [isLoggedIn]);
 
   return (
     <div className="App-container">
       <div className="App-background"></div>
       <div className="App">
         <div className="App-header">
-          <h2>{platform ? platform.name : "platform not found..."}</h2>
-          {platform && <img src={platform.logo} />}
-          {profile && (
-            <div>
+          <h2>{platform ? platform.name : "Loading..."}</h2>
+          {platform && <img alt={`${platform.name}`} src={platform.logo} />}
+          {isLoggedIn && profile && (
+            <div className="profile">
               <div>{profile?.customer?.email}</div>
-              <div>{profile?.customer?.stripeCustomerId}</div>
             </div>
           )}
         </div>
         <div className="App-form">
-          {profile ? (
-            <Settings variableMetadata={platform.plans[0].variableMetadata} />
+          {isLoggedIn && profile && platform ? (
+            <Settings
+              variableMetadata={platform.plans[0].variableMetadata}
+              logout={() => {
+                Cookies.remove("kubesail-platform-customer");
+                setLoggedIn(null);
+              }}
+            />
           ) : (
-            <Login />
+            <Login setLoggedIn={setLoggedIn} />
           )}
         </div>
       </div>
