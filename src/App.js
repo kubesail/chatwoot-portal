@@ -2,71 +2,131 @@ import Cookies from "js-cookie";
 import "./App.css";
 import Login from "./Login";
 import Settings from "./Settings";
-import { useState, useEffect } from "react";
-import { fetch } from "./util";
+import { Component } from "react";
+import { fetch, toast } from "./util";
+import { loadStripe } from "@stripe/stripe-js";
 
-let originOverride;
-try {
-  window.localStorage.getItem("origin");
-} catch {}
+class App extends Component {
+  state = {
+    profile: null,
+    platform: null,
+    isLoggedIn: Cookies.get("kubesail-platform-customer"),
+  };
 
-function App() {
-  const [profile, setProfile] = useState(null);
-  const [platform, setPlatform] = useState(null);
-  const [isLoggedIn, setLoggedIn] = useState(
-    Cookies.get("kubesail-platform-customer")
-  );
-
-  async function fetchProfile() {
+  fetchProfile = async () => {
+    const { profile, isLoggedIn } = this.state;
+    if (!isLoggedIn || profile) return;
     let { json, status } = await fetch("/platform/customer/profile");
     if (status !== 200) {
-      return setProfile(null);
+      return;
     }
-    setProfile(json);
-  }
+    this.setState({ profile: json });
+  };
 
-  async function fetchPublicPlatform() {
-    let { json, status } = await fetch("/platform", {
-      query: { origin: originOverride },
-      credentials: "omit",
+  fetchStripeSession = async () => {
+    const { platform } = this.state;
+    let { json, status } = await fetch("/platform/customer/stripe-session", {
+      method: "POST",
     });
-    setPlatform(json);
-  }
+    if (json.error) return toast({ msg: json.error });
+    if (status !== 200)
+      return toast({ msg: "Error redirecting to billing portal" });
 
-  useEffect(() => {
-    fetchPublicPlatform();
-    if (isLoggedIn) fetchProfile();
-  }, [isLoggedIn]);
+    const stripe = await loadStripe(platform.stripePublishableKey);
+    await stripe.redirectToCheckout({ sessionId: json.id });
+    // TODO: Billing portal option
+  };
 
-  return (
-    <div className="App-container">
-      <div className="App-background"></div>
-      <div className="App">
-        <div className="App-header">
-          <h2>{platform ? platform.name : "Loading..."}</h2>
-          {platform && <img alt={`${platform.name}`} src={platform.logo} />}
-          {isLoggedIn && profile && (
-            <div className="profile">
-              <div>{profile?.customer?.email}</div>
+  fetchPublicPlatform = async () => {
+    let { json, status } = await fetch("/platform", { credentials: "omit" });
+    if (status !== 200) {
+      return this.setState({ platform: false });
+    }
+    this.setState({ platform: json });
+  };
+
+  componentDidMount = async () => {
+    await this.fetchPublicPlatform();
+    this.fetchProfile();
+  };
+
+  renderPlatformPlans = () => {
+    const { platform } = this.state;
+    return (
+      <div>
+        <h2>Pick a plan:</h2>
+        {platform.plans.map((plan) => (
+          <div className="App-plan" onClick={this.fetchStripeSession}>
+            <div className="details">
+              <h2>{plan.name}</h2>
+              <div>${(plan.price / 100).toFixed(2)} / mo</div>
             </div>
-          )}
-        </div>
-        <div className="App-form">
-          {isLoggedIn && profile && platform ? (
-            <Settings
-              variableMetadata={platform.plans[0].variableMetadata}
-              logout={() => {
-                Cookies.remove("kubesail-platform-customer");
-                setLoggedIn(null);
-              }}
-            />
-          ) : (
-            <Login setLoggedIn={setLoggedIn} />
-          )}
+
+            <svg
+              focusable="false"
+              class="svg-inline--fa fa-arrow-circle-right fa-w-16"
+              role="img"
+              viewBox="0 0 512 512"
+              className="App-plan-icon"
+            >
+              <path
+                fill="currentColor"
+                d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm-28.9 143.6l75.5 72.4H120c-13.3 0-24 10.7-24 24v16c0 13.3 10.7 24 24 24h182.6l-75.5 72.4c-9.7 9.3-9.9 24.8-.4 34.3l11 10.9c9.4 9.4 24.6 9.4 33.9 0L404.3 273c9.4-9.4 9.4-24.6 0-33.9L271.6 106.3c-9.4-9.4-24.6-9.4-33.9 0l-11 10.9c-9.5 9.6-9.3 25.1.4 34.4z"
+              />
+            </svg>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  render() {
+    const { platform, profile, isLoggedIn } = this.state;
+    return (
+      <div className="App-container">
+        <div className="App-background"></div>
+        <div className="App">
+          <div className="App-header">
+            <h2>{platform ? platform.name : "Loading..."}</h2>
+            {platform && <img alt={`${platform.name}`} src={platform.logo} />}
+            {isLoggedIn && profile && (
+              <div className="profile">
+                <div>{profile?.customer?.email}</div>
+              </div>
+            )}
+            <div className="logout">
+              <button
+                className="plain"
+                onClick={() => {
+                  Cookies.remove("kubesail-platform-customer");
+                  this.setState({ isLoggedIn: null });
+                }}
+              >
+                Log out
+              </button>
+            </div>
+          </div>
+          <div className="App-form">
+            {isLoggedIn &&
+            profile &&
+            platform &&
+            profile.customer.platformPlans.length > 0 ? (
+              <Settings platform={platform} profile={profile} />
+            ) : profile?.customer?.platformPlans?.length === 0 ? (
+              this.renderPlatformPlans()
+            ) : (
+              <Login
+                setLoggedIn={(isLoggedIn) => {
+                  this.setState({ isLoggedIn });
+                  this.fetchProfile();
+                }}
+              />
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default App;
