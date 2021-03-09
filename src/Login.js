@@ -16,13 +16,14 @@ function Login({ setLoggedIn }) {
     else setFieldError("");
 
     setLoggingIn(true);
-    const { json } = await fetch(
+    const { status, json } = await fetch(
       `/platform/customer/${register ? "register" : "login"}`,
       {
         method: "POST",
         body: { email, password },
       }
     );
+    console.log({ status });
     if (json && json.error) {
       setFormError(json.error);
     } else {

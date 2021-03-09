@@ -1,22 +1,31 @@
-// import "./Settings.css";
-import { useState, useEffect } from "react";
 import { fetch } from "./util";
 
-function Settings({ logout, variableMetadata = {} }) {
-  // const [email, setEmail] = useState("");
-
+function Settings({ platform, profile }) {
   const updateSettings = async function (e) {
     e.preventDefault();
-    // await fetch("/platform/customer/register", {
-    //   method: "POST",
-    //   body: { email, password },
-    // });
+    const formData = new FormData(e.target);
+    await fetch("/platform/customer/plan", {
+      method: "POST",
+      body: { variableData: Object.fromEntries(formData) },
+    });
   };
+
+  const variableMetadata = platform.plans[0].variableMetadata;
 
   return (
     <div className="Settings">
       <form onSubmit={updateSettings}>
+        <div>
+          {(profile?.customer?.platformPlans || []).map((plan) => (
+            <div key={plan.name}>
+              <h2>
+                Update your <strong>{plan.name}</strong> subscription settings:
+              </h2>
+            </div>
+          ))}
+        </div>
         {Object.keys(variableMetadata).map((variable) => {
+          const field = variableMetadata[variable];
           return (
             <div className="input" key={variable}>
               {variable}
@@ -24,7 +33,7 @@ function Settings({ logout, variableMetadata = {} }) {
                 type="text"
                 id={variable}
                 name={variable}
-                placeholder={variableMetadata[variable]}
+                placeholder={field.description || ""}
                 // value={password}
                 // onChange={(e) => setPassword(e.target.value)}
               />
@@ -39,11 +48,6 @@ function Settings({ logout, variableMetadata = {} }) {
           Save
         </button>
       </form>
-      <div className="logout">
-        <button className="plain" onClick={logout}>
-          Log out
-        </button>
-      </div>
     </div>
   );
 }

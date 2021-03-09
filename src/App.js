@@ -88,7 +88,13 @@ class App extends Component {
         <div className="App">
           <div className="App-header">
             <h2>{platform ? platform.name : "Loading..."}</h2>
-            {platform && <img alt={`${platform.name}`} src={platform.logo} />}
+            {platform && (
+              <img
+                style={{ maxWidth: "250px", maxHeight: "250px" }}
+                alt={`${platform.name}`}
+                src={platform.logo}
+              />
+            )}
             {isLoggedIn && profile && (
               <div className="profile">
                 <div>{profile?.customer?.email}</div>

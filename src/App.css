@@ -75,6 +75,25 @@
   color: #61dafb;
 }
 
+.App-plan {
+  padding: 20px;
+  border: 1px solid #d6d6d6;
+  margin: 20px;
+  border-radius: 4px;
+  display: flex;
+  cursor: pointer;
+}
+.App-plan:hover {
+  box-shadow: var(--box-shadow);
+}
+.App-plan h2 {
+  margin-bottom: 7px;
+}
+.App-plan-icon {
+  width: 30px;
+  margin-left: auto;
+}
+
 .logout {
   font-size: 10px;
   margin-top: 20px;
