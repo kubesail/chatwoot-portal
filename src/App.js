@@ -64,10 +64,9 @@ class App extends Component {
 
             <svg
               focusable="false"
-              class="svg-inline--fa fa-arrow-circle-right fa-w-16"
+              className="App-plan-icon svg-inline--fa fa-arrow-circle-right fa-w-16"
               role="img"
               viewBox="0 0 512 512"
-              className="App-plan-icon"
             >
               <path
                 fill="currentColor"
