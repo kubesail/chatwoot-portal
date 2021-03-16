@@ -2,15 +2,26 @@ import { Component } from "react";
 import { fetch } from "./util";
 
 class Settings extends Component {
-  state = { platform: null };
+  state = { platform: null, formFields: {} };
 
-  componentDidMount() {
-    this.setState({ platform: this.props.platform });
+  constructor(props) {
+    super(props);
+    this.state.platform = props.platform;
   }
 
   updateSettings = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+    const variableMetadata = this.state.platform.plans[0].variableMetadata;
+    for (const pair of formData.entries()) {
+      const variable = pair[0];
+      const value = pair[1];
+      const varData = variableMetadata[variable];
+      if (varData.userRequired && !value) {
+        this.setState({ requiredEntryError: variable });
+        return;
+      }
+    }
     await fetch("/platform/customer/plan", {
       method: "POST",
       body: { variableData: Object.fromEntries(formData) },
@@ -19,6 +30,8 @@ class Settings extends Component {
 
   render() {
     const variableMetadata = this.state.platform.plans[0].variableMetadata;
+
+    console.log({ variableMetadata });
 
     return (
       <div className="Settings">
@@ -43,9 +56,19 @@ class Settings extends Component {
                   id={variable}
                   name={variable}
                   placeholder={field.description || ""}
-                  value={field.default || ""}
-                  // onChange={(e) => setPassword(e.target.value)}
+                  value={this.state.formFields[variable] || field.default || ""}
+                  onChange={(e) =>
+                    this.setState({
+                      formFields: {
+                        ...this.state.formFields,
+                        [variable]: e.target.value,
+                      },
+                    })
+                  }
                 />
+                {this.state.requiredEntryError === variable ? (
+                  <div>This field is required!</div>
+                ) : null}
                 <label htmlFor="password" className="input-label">
                   {variable}
                 </label>
