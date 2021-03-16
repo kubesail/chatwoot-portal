@@ -10,12 +10,11 @@ class App extends Component {
   state = {
     profile: null,
     platform: null,
-    isLoggedIn: Cookies.get("kubesail-platform-customer"),
   };
 
   fetchProfile = async () => {
-    const { profile, isLoggedIn } = this.state;
-    if (!isLoggedIn || profile) return;
+    const { profile } = this.state;
+    if (profile) return;
     let { json, status } = await fetch("/platform/customer/profile");
     if (status !== 200) {
       return;
@@ -80,7 +79,7 @@ class App extends Component {
   };
 
   render() {
-    const { platform, profile, isLoggedIn } = this.state;
+    const { platform, profile } = this.state;
     return (
       <div className="App-container">
         <div className="App-background"></div>
@@ -94,7 +93,7 @@ class App extends Component {
                 src={platform.logo}
               />
             )}
-            {isLoggedIn && profile && (
+            {profile && (
               <div className="profile">
                 <div>{profile?.customer?.email}</div>
               </div>
@@ -103,8 +102,8 @@ class App extends Component {
               <button
                 className="plain"
                 onClick={() => {
+                  // TODO logout route
                   Cookies.remove("kubesail-platform-customer");
-                  this.setState({ isLoggedIn: null });
                 }}
               >
                 Log out
@@ -112,8 +111,7 @@ class App extends Component {
             </div>
           </div>
           <div className="App-form">
-            {isLoggedIn &&
-            profile &&
+            {profile &&
             platform &&
             profile.customer.platformPlans.length > 0 ? (
               <Settings platform={platform} profile={profile} />
@@ -121,8 +119,7 @@ class App extends Component {
               this.renderPlatformPlans()
             ) : (
               <Login
-                setLoggedIn={(isLoggedIn) => {
-                  this.setState({ isLoggedIn });
+                setLoggedIn={() => {
                   this.fetchProfile();
                 }}
               />
