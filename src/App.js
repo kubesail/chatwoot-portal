@@ -105,7 +105,7 @@ class App extends Component {
                             <a
                               target="_blank"
                               rel="noopener noreferrer"
-                              href={domain}
+                              href={`https://${domain}`}
                             >
                               {domain}
                             </a>
