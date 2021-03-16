@@ -96,6 +96,24 @@ class App extends Component {
             {profile && (
               <div className="profile">
                 <div>{profile?.customer?.email}</div>
+                <div>
+                  {profile?.customer?.platformCustomerPlanTemplates &&
+                    profile.customer.platformCustomerPlanTemplates.map(
+                      (template) => {
+                        return template.dnsName.split(",").map((domain) => {
+                          return (
+                            <a
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              href={domain}
+                            >
+                              {domain}
+                            </a>
+                          );
+                        });
+                      }
+                    )}
+                </div>
               </div>
             )}
             <div className="logout">

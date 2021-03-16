@@ -31,13 +31,11 @@ class Settings extends Component {
   render() {
     const variableMetadata = this.state.platform.plans[0].variableMetadata;
 
-    console.log({ variableMetadata });
-
     return (
       <div className="Settings">
         <form onSubmit={this.updateSettings}>
           <div>
-            {(this.state.profile?.customer?.platformPlans || []).map((plan) => (
+            {(this.props.profile?.customer?.platformPlans || []).map((plan) => (
               <div key={plan.name}>
                 <h2>
                   Update your <strong>{plan.name}</strong> subscription
