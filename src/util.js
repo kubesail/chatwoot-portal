@@ -3,10 +3,6 @@ import { Route } from "react-router-dom";
 // import Cookies from "js-cookie";
 import { API_TARGET, COMMIT_HASH } from "./config";
 
-export function signOutHandler() {
-  console.error("Signout");
-}
-
 export const fetch = async (targetUri, options = { headers: {} }) => {
   const uri = API_TARGET + targetUri;
 
@@ -45,8 +41,7 @@ export const fetch = async (targetUri, options = { headers: {} }) => {
     return { status: err, json };
   }
   if (!res) throw new Error("API Fetch - no response");
-  else if (status === 401) signOutHandler();
-  else if (status === 204) return { status, json: {} };
+  else if (status === 204 || status === 401) return { status, json: {} };
   else {
     try {
       json = await res.json();

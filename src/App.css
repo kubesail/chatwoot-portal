@@ -62,6 +62,14 @@
   color: #adb0b7;
 }
 
+.App-header .profile a {
+  color: #adb0b7;
+}
+
+.App-header .profile .errors {
+  color: red;
+}
+
 .App-header img {
   margin-top: 20px;
 }
