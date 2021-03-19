@@ -30,6 +30,8 @@ class Settings extends Component {
 
   render() {
     const variableMetadata = this.state.platform.plans[0].variableMetadata;
+    const variableData = this.props.profile?.customer?.platformPlans?.[0]
+      ?.platformCustomerPlan?.variableData;
 
     return (
       <div className="Settings">
@@ -46,6 +48,7 @@ class Settings extends Component {
           </div>
           {Object.keys(variableMetadata).map((variable) => {
             const field = variableMetadata[variable];
+            const value = variableData?.[variable];
             return (
               <div className="input" key={variable}>
                 {variable}
@@ -54,7 +57,12 @@ class Settings extends Component {
                   id={variable}
                   name={variable}
                   placeholder={field.description || ""}
-                  value={this.state.formFields[variable] || field.default || ""}
+                  value={
+                    this.state.formFields[variable] ||
+                    value ||
+                    field.default ||
+                    ""
+                  }
                   onChange={(e) =>
                     this.setState({
                       formFields: {
