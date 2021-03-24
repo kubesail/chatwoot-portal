@@ -165,7 +165,11 @@ class App extends Component {
             {profile &&
             platform &&
             profile.customer.platformPlans.length > 0 ? (
-              <Settings platform={platform} profile={profile} />
+              <Settings
+                platform={platform}
+                profile={profile}
+                fetchProfile={this.fetchProfile}
+              />
             ) : profile?.customer?.platformPlans?.length === 0 ? (
               this.renderPlatformPlans()
             ) : (

@@ -60,6 +60,7 @@
   margin-top: 20px;
   font-size: 14px;
   color: #adb0b7;
+  line-height: 1.6rem;
 }
 
 .App-header .profile a {
@@ -77,6 +78,10 @@
 .App-form {
   padding: 20px;
   width: 50%;
+}
+
+.App-form .input {
+  line-height: 2rem;
 }
 
 .App-link {

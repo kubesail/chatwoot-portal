@@ -26,6 +26,9 @@ class Settings extends Component {
       method: "POST",
       body: { variableData: Object.fromEntries(formData) },
     });
+    setTimeout(() => {
+      this.props.fetchProfile();
+    }, 250);
   };
 
   render() {
