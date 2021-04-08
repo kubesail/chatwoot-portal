@@ -1,3 +1,8 @@
+# KubeSail Customer Billing Portal
+
+See the [KubeSail Docs](https://docs.kubesail.com/platform/) for more info. This is an open source portal which you can fork and customize, which allows your customers to sign-up for a KubeSail Platform. We're busy adding features and documentation to this portal, but please feel free to reach out to us at support@kubesail.com or [in our discord channel](https://discord.gg/N3zNdp7jHc)
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

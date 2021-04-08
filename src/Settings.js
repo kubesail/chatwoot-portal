@@ -86,7 +86,7 @@ class Settings extends Component {
           })}
 
           <button className="plain" type="submit">
-            Save
+            Save & Re-Launch
           </button>
         </form>
       </div>
