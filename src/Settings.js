@@ -26,6 +26,9 @@ class Settings extends Component {
       method: "POST",
       body: { variableData: Object.fromEntries(formData) },
     });
+    setTimeout(() => {
+      this.props.fetchProfile();
+    }, 250);
   };
 
   render() {
@@ -83,7 +86,7 @@ class Settings extends Component {
           })}
 
           <button className="plain" type="submit">
-            Save
+            Save & Re-Launch
           </button>
         </form>
       </div>
