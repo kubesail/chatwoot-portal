@@ -102,7 +102,10 @@ class App extends Component {
       <div className="App-container">
         <div className="App-background"></div>
         <div className="App">
-          <div className="App-header">
+          <div
+            className="App-header"
+            style={{ backgroundColor: platform.brandColor || "#282c34" }}
+          >
             <h2>{platform ? platform.name : "Loading..."}</h2>
             {platform && (
               <img
