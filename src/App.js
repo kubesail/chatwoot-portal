@@ -100,12 +100,12 @@ class App extends Component {
     console.log({ profile });
     return (
       <div className="App-container">
-        <div className="App-background"></div>
+        <div
+          className="App-background"
+          style={{ backgroundColor: platform?.brandColor || "#282c34" }}
+        />
         <div className="App">
-          <div
-            className="App-header"
-            style={{ backgroundColor: platform?.brandColor || "#282c34" }}
-          >
+          <div className="App-header">
             <h2>{platform ? platform.name : "Loading..."}</h2>
             {platform && (
               <img
