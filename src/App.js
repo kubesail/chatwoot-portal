@@ -152,17 +152,19 @@ class App extends Component {
                 </div>
               </div>
             )}
-            <div className="logout">
-              <button
-                className="plain"
-                onClick={() => {
-                  // TODO logout route
-                  Cookies.remove("kubesail-platform-customer");
-                }}
-              >
-                Log out
-              </button>
-            </div>
+            {profile && (
+              <div className="logout">
+                <button
+                  className="plain"
+                  onClick={() => {
+                    // TODO logout route
+                    Cookies.remove("kubesail-platform-customer");
+                  }}
+                >
+                  Log out
+                </button>
+              </div>
+            )}
           </div>
           <div className="App-form">
             {profile &&
@@ -177,6 +179,7 @@ class App extends Component {
               this.renderPlatformPlans()
             ) : (
               <Login
+                platform={platform}
                 setLoggedIn={() => {
                   this.fetchProfile();
                 }}
