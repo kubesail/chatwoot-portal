@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import Cookies from "js-cookie";
 import "./App.css";
 import Login from "./Login";
@@ -97,9 +98,25 @@ class App extends Component {
 
   render() {
     const { platform, profile } = this.state;
-    console.log({ profile });
     return (
       <div className="App-container">
+        <Helmet>
+          {/* <link rel="canonical" href="https://kubesail.com" />
+          <meta property="og:title" content="KubeSail" />
+          <meta
+          property="og:description"
+          content="Host apps at Home (or anywhere) with Kubernetes and KubeSail!"
+          />
+          <meta property="og:site_name" content="KubeSail.com" />
+          <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://kubesail.com/" /> */}
+          <meta property="og:image:type" content="image/png" />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="1200" />
+          <meta property="og:image" content={platform?.logo} />
+          <title>{platform?.name || ""} Customer Portal</title>
+          <link rel="icon" href={platform?.logo || "/favicon.ico"} />
+        </Helmet>
         <div
           className="App-background"
           style={{ backgroundColor: platform?.brandColor || "#282c34" }}
