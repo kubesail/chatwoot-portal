@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { fetch } from "./util";
+import "./Login.css";
 
-function Login({ setLoggedIn }) {
+function Login({ setLoggedIn, platform }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [action, setAction] = useState("register");
@@ -9,7 +10,7 @@ function Login({ setLoggedIn }) {
   const [loggingIn, setLoggingIn] = useState(false);
   const [fieldError, setFieldError] = useState("");
 
-  const login = async function (register = false) {
+  const login = async function ({ register = false }) {
     if (loggingIn) return;
     if (!email) return setFieldError("email");
     else if (!password) return setFieldError("password");
@@ -35,7 +36,11 @@ function Login({ setLoggedIn }) {
 
   return (
     <div className="Login">
-      <div>{action === "login" ? "Login" : "Register"}</div>
+      {action === "login" ? (
+        <h2>Login to your account</h2>
+      ) : (
+        <h2>Create a {platform?.name} Account</h2>
+      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -87,7 +92,7 @@ function Login({ setLoggedIn }) {
           ? "Already have an account?"
           : "Need an account?"}
         <button
-          className="plain"
+          className="plain underline"
           onClick={() => {
             setFieldError("");
             setFormError("");
