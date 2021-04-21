@@ -59,12 +59,12 @@
 .App-header .profile {
   margin-top: 20px;
   font-size: 14px;
-  color: #adb0b7;
+  color: #ebeef5;
   line-height: 1.6rem;
 }
 
 .App-header .profile a {
-  color: #adb0b7;
+  color: #ebeef5;
 }
 
 .App-header .profile .errors {
@@ -112,7 +112,10 @@
   margin-top: 20px;
 }
 .logout button {
-  color: #adb0b7;
+  border: 1px solid #ebeef5;
+  padding: 2px 4px;
+  border-radius: 3px;
+  color: #ebeef5;
 }
 
 @media only screen and (min-width: 992px) {

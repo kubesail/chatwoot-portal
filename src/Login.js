@@ -10,7 +10,7 @@ function Login({ setLoggedIn, platform }) {
   const [loggingIn, setLoggingIn] = useState(false);
   const [fieldError, setFieldError] = useState("");
 
-  const login = async function ({ register = false }) {
+  const login = async function (register = false) {
     if (loggingIn) return;
     if (!email) return setFieldError("email");
     else if (!password) return setFieldError("password");
@@ -19,12 +19,8 @@ function Login({ setLoggedIn, platform }) {
     setLoggingIn(true);
     const { status, json } = await fetch(
       `/platform/customer/${register ? "register" : "login"}`,
-      {
-        method: "POST",
-        body: { email, password },
-      }
+      { method: "POST", body: { email, password } }
     );
-    console.log({ status });
     if (json && json.error) {
       setFormError(json.error);
     } else {

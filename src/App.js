@@ -133,7 +133,6 @@ class App extends Component {
             )}
             {profile && (
               <div className="profile">
-                <div>{profile?.customer?.email}</div>
                 <div>
                   {profile?.customer?.platformCustomerPlanTemplates ? (
                     <div>
@@ -167,6 +166,7 @@ class App extends Component {
                     </div>
                   ) : null}
                 </div>
+                <div>{profile?.customer?.email}</div>
               </div>
             )}
             {profile && (
