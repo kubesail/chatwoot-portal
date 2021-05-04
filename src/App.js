@@ -1,16 +1,65 @@
 import { Helmet } from "react-helmet";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
+import { Component } from "react";
+import socketioClient from "socket.io-client";
+import { loadStripe } from "@stripe/stripe-js";
 import "./App.css";
 import Login from "./Login";
 import Settings from "./Settings";
-import { Component } from "react";
 import { fetch, toast } from "./util";
-import { loadStripe } from "@stripe/stripe-js";
+import { API_TARGET, WSS_TARGET } from "./config";
 
 class App extends Component {
   state = {
     profile: null,
     platform: null,
+  };
+
+  createSocket = (force = false) => {
+    if (window.__EVENTSTREAM && !force) return window.__EVENTSTREAM;
+
+    let target = WSS_TARGET;
+
+    try {
+      const key = window.localStorage.getItem("INTEGRATION_API_KEY");
+      const secret = window.localStorage.getItem("INTEGRATION_API_SECRET");
+      if (key && secret) {
+        target = target + `?token=${key}|${secret}`;
+      }
+    } catch {}
+
+    window.__EVENTSTREAM = socketioClient(target, {
+      timeout: 5000,
+      reconnectionDelayMax: 3000,
+      secure: true,
+    });
+
+    window.__EVENTSTREAM.on("error", (err) => {
+      if (err === "Unauthorized") {
+        console.error("Unauthorized received from Websocket!", { err });
+        toast({
+          type: "error",
+          msg: `Failed to connect to websocket - logging out!`,
+          err,
+        });
+      } else if (err.type !== "TransportError") {
+        console.error("Unknown error!", err);
+      }
+    });
+
+    window.__EVENTSTREAM.on("connect", () => {
+      console.log("Socket connected");
+    });
+
+    window.__EVENTSTREAM.on("connect_error", (error) => {
+      console.warn("Socket connection error!", error);
+    });
+
+    window.__EVENTSTREAM.on("connect_timeout", (timeout) => {
+      console.warn("Socket connection timeout!", timeout);
+    });
+
+    return window.__EVENTSTREAM;
   };
 
   fetchProfile = async () => {
@@ -52,6 +101,9 @@ class App extends Component {
   componentDidMount = async () => {
     await this.fetchPublicPlatform();
     this.fetchProfile();
+
+    // If profile...
+    this.createSocket();
   };
 
   renderPlatformPlans = () => {
@@ -171,15 +223,7 @@ class App extends Component {
             )}
             {profile && (
               <div className="logout">
-                <button
-                  className="plain"
-                  onClick={() => {
-                    // TODO logout route
-                    Cookies.remove("kubesail-platform-customer");
-                  }}
-                >
-                  Log out
-                </button>
+                <a href={`${API_TARGET}/platform/customer/logout`}>Log out</a>
               </div>
             )}
           </div>
