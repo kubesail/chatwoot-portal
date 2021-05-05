@@ -122,6 +122,12 @@
   font-size: 28px;
 }
 
+.App-form .progress {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media only screen and (min-width: 992px) {
   .App {
     align-items: flex-start;

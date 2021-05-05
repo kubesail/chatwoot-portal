@@ -8,11 +8,14 @@ import Login from "./Login";
 import Settings from "./Settings";
 import { fetch, toast } from "./util";
 import { API_TARGET, WSS_TARGET } from "./config";
+import ProgressCircle from "./ProgressCircle";
 
 class App extends Component {
   state = {
     profile: null,
     platform: null,
+    progress: 0,
+    resources: [],
   };
 
   createSocket = () => {
@@ -72,12 +75,33 @@ class App extends Component {
     const socket = this.createSocket();
 
     if (json?.customer?.platformCustomerPlanTemplates) {
-      console.log("watch-resources");
       socket.emit("watch-resources");
     }
 
     socket.on("resource-event", (event) => {
-      console.log("resource-event", event);
+      const existing = this.state.resources.findIndex(
+        (r) => r.name === event.name && r.kind === event.kind
+      );
+      let resources;
+      if (existing === -1) {
+        resources = [...this.state.resources, event];
+      } else {
+        resources = this.state.resources.map((r) => {
+          if (r.name === event.name && r.kind === event.kind) return event;
+          return r;
+        });
+      }
+      let newPercentComplete = 0;
+      for (let i = 0; i < resources.length; i++) {
+        const resource = resources[i];
+        if (resource.kind === "PersistentVolumeClaim") {
+          if (resource.status.phase !== "Bound") break;
+        } else if (resource.kind === "Deployment") {
+          if (resource.status.availableReplicas < 1) break;
+        }
+        newPercentComplete = ((i + 1) / resources.length) * 100;
+      }
+      this.setState({ resources, progress: newPercentComplete });
     });
 
     return json;
@@ -154,6 +178,11 @@ class App extends Component {
 
   render() {
     const { platform, profile } = this.state;
+    console.log(
+      "this.state.progress",
+      this.state.progress,
+      this.state.resources.length
+    );
     return (
       <div className="App-container">
         <Helmet>
@@ -238,8 +267,14 @@ class App extends Component {
           </div>
           <div className="App-form">
             {profile &&
-            platform &&
-            profile.customer.platformPlans.length > 0 ? (
+            this.state.progress < 100 &&
+            this.state.resources.length > 0 ? (
+              <div className="progress">
+                <ProgressCircle percent={this.state.progress} />
+              </div>
+            ) : profile &&
+              platform &&
+              profile.customer.platformPlans.length > 0 ? (
               <Settings
                 platform={platform}
                 profile={profile}
