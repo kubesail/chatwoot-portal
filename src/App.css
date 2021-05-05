@@ -126,6 +126,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+.App-form .progress .progress-message {
+  margin: 50px;
 }
 
 @media only screen and (min-width: 992px) {

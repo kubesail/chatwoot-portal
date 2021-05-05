@@ -15,6 +15,7 @@ class App extends Component {
     profile: null,
     platform: null,
     progress: 0,
+    progressMessage: "",
     resources: [],
   };
 
@@ -92,16 +93,35 @@ class App extends Component {
         });
       }
       let newPercentComplete = 0;
+      let progressMessage = "";
       for (let i = 0; i < resources.length; i++) {
         const resource = resources[i];
         if (resource.kind === "PersistentVolumeClaim") {
-          if (resource.status.phase !== "Bound") break;
+          if (resource.status.phase !== "Bound") {
+            progressMessage = "Provisioning storage...";
+            break;
+          }
         } else if (resource.kind === "Deployment") {
-          if (resource.status.availableReplicas < 1) break;
+          if (resource.status.availableReplicas < 1) {
+            progressMessage = "Launching your app...";
+            break;
+          }
+        } else {
+          if (
+            resource.status.conditions.find((c) => c.type === "Ready")
+              .status === "False"
+          ) {
+            progressMessage = "Finishing Touches...";
+            break;
+          }
         }
         newPercentComplete = ((i + 1) / resources.length) * 100;
       }
-      this.setState({ resources, progress: newPercentComplete });
+      this.setState({
+        resources,
+        progress: newPercentComplete,
+        progressMessage,
+      });
     });
 
     return json;
@@ -270,7 +290,12 @@ class App extends Component {
             this.state.progress < 100 &&
             this.state.resources.length > 0 ? (
               <div className="progress">
-                <ProgressCircle percent={this.state.progress} />
+                <div>
+                  <ProgressCircle percent={this.state.progress} />
+                </div>
+                <div className="progress-message">
+                  {this.state.progressMessage}
+                </div>
               </div>
             ) : profile &&
               platform &&
