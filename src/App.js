@@ -66,14 +66,18 @@ class App extends Component {
     const { profile } = this.state;
     if (profile) return;
     let { json, status } = await fetch("/platform/customer/profile");
-    if (status === 401) {
+    if (status === 400) {
       // Sign-out
-      console.log("sign out");
+      // console.log("sign out 400");
+    } else if (status === 401) {
+      // console.log("sign out");
     }
+
     if (status !== 200) {
       return;
     }
     this.setState({ profile: json });
+    return json;
   };
 
   fetchStripeSession = async () => {
@@ -100,10 +104,10 @@ class App extends Component {
 
   componentDidMount = async () => {
     await this.fetchPublicPlatform();
-    this.fetchProfile();
-
-    // If profile...
-    this.createSocket();
+    const profile = await this.fetchProfile();
+    if (profile) {
+      this.createSocket();
+    }
   };
 
   renderPlatformPlans = () => {

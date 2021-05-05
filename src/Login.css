@@ -2,3 +2,8 @@
   display: flex;
   max-width: 800px;
 }
+
+.Login .note,
+.Login .note button {
+  font-size: 12px;
+}
