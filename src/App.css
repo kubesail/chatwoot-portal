@@ -76,7 +76,7 @@
 }
 
 .App-form {
-  padding: 20px;
+  padding: 60px;
   width: 50%;
 }
 
@@ -95,6 +95,7 @@
   border-radius: 4px;
   display: flex;
   cursor: pointer;
+  line-height: 32px;
 }
 .App-plan:hover {
   box-shadow: var(--box-shadow);
@@ -108,19 +109,61 @@
 }
 
 .logout {
-  font-size: 10px;
+  font-size: 12px;
   margin-top: 20px;
 }
-.logout button {
-  border: 1px solid #ebeef5;
-  padding: 2px 4px;
+.logout a {
   border-radius: 3px;
   color: #ebeef5;
+  text-decoration: none;
+}
+
+.Settings h2 {
+  font-size: 28px;
+}
+
+.App-form .progress {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.App-form .progress .progress-message {
+  margin: 50px;
 }
 
 @media only screen and (min-width: 992px) {
   .App {
     align-items: flex-start;
     transform: translateY(max(48px, calc(50vh - 55%)));
+  }
+}
+@media only screen and (max-width: 992px) {
+  .App {
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    max-width: unset;
+  }
+  .App-container:before {
+    display: none;
+  }
+  .App-header {
+    width: 100%;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+  }
+  .App-form {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    flex: 1;
+  }
+  html,
+  body,
+  #root,
+  .App-container,
+  .App {
+    height: 100vh;
   }
 }

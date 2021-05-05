@@ -42,10 +42,7 @@ class Settings extends Component {
           <div>
             {(this.props.profile?.customer?.platformPlans || []).map((plan) => (
               <div key={plan.name}>
-                <h2>
-                  Update your <strong>{plan.name}</strong> subscription
-                  settings:
-                </h2>
+                <h2>Settings</h2>
               </div>
             ))}
           </div>

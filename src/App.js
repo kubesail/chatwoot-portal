@@ -1,30 +1,130 @@
 import { Helmet } from "react-helmet";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
+import { Component } from "react";
+import socketioClient from "socket.io-client";
+import { loadStripe } from "@stripe/stripe-js";
 import "./App.css";
 import Login from "./Login";
 import Settings from "./Settings";
-import { Component } from "react";
 import { fetch, toast } from "./util";
-import { loadStripe } from "@stripe/stripe-js";
+import { API_TARGET, WSS_TARGET } from "./config";
+import ProgressCircle from "./ProgressCircle";
 
 class App extends Component {
   state = {
     profile: null,
     platform: null,
+    progress: 0,
+    progressMessage: "",
+    resources: [],
+  };
+
+  createSocket = () => {
+    let target = WSS_TARGET;
+
+    try {
+      const key = window.localStorage.getItem("INTEGRATION_API_KEY");
+      const secret = window.localStorage.getItem("INTEGRATION_API_SECRET");
+      if (key && secret) {
+        target = target + `?token=${key}|${secret}`;
+      }
+    } catch {}
+
+    this.socket = socketioClient(target, {
+      timeout: 5000,
+      reconnectionDelayMax: 3000,
+      secure: true,
+    });
+
+    this.socket.on("error", (err) => {
+      if (err.type !== "TransportError") {
+        console.error("Unknown error!", err);
+      }
+    });
+
+    // this.socket.on("connect", () => {
+    //   console.log("Socket connected");
+    // });
+
+    this.socket.on("connect_error", (error) => {
+      console.warn("Socket connection error!", error);
+    });
+
+    this.socket.on("connect_timeout", (timeout) => {
+      console.warn("Socket connection timeout!", timeout);
+    });
+
+    return this.socket;
   };
 
   fetchProfile = async () => {
     const { profile } = this.state;
     if (profile) return;
     let { json, status } = await fetch("/platform/customer/profile");
-    if (status === 401) {
+    if (status === 400) {
       // Sign-out
-      console.log("sign out");
+      // console.log("sign out 400");
+    } else if (status === 401) {
+      // console.log("sign out");
     }
+
     if (status !== 200) {
       return;
     }
     this.setState({ profile: json });
+
+    const socket = this.createSocket();
+
+    if (json?.customer?.platformCustomerPlanTemplates) {
+      socket.emit("watch-resources");
+    }
+
+    socket.on("resource-event", (event) => {
+      const existing = this.state.resources.findIndex(
+        (r) => r.name === event.name && r.kind === event.kind
+      );
+      let resources;
+      if (existing === -1) {
+        resources = [...this.state.resources, event];
+      } else {
+        resources = this.state.resources.map((r) => {
+          if (r.name === event.name && r.kind === event.kind) return event;
+          return r;
+        });
+      }
+      let newPercentComplete = 0;
+      let progressMessage = "";
+      for (let i = 0; i < resources.length; i++) {
+        const resource = resources[i];
+        if (resource.kind === "PersistentVolumeClaim") {
+          if (resource.status.phase !== "Bound") {
+            progressMessage = "Provisioning storage...";
+            break;
+          }
+        } else if (resource.kind === "Deployment") {
+          if (resource.status.availableReplicas < 1) {
+            progressMessage = "Launching your app...";
+            break;
+          }
+        } else {
+          if (
+            resource.status.conditions.find((c) => c.type === "Ready")
+              .status === "False"
+          ) {
+            progressMessage = "Finishing Touches...";
+            break;
+          }
+        }
+        newPercentComplete = ((i + 1) / resources.length) * 100;
+      }
+      this.setState({
+        resources,
+        progress: newPercentComplete,
+        progressMessage,
+      });
+    });
+
+    return json;
   };
 
   fetchStripeSession = async () => {
@@ -51,7 +151,7 @@ class App extends Component {
 
   componentDidMount = async () => {
     await this.fetchPublicPlatform();
-    this.fetchProfile();
+    await this.fetchProfile();
   };
 
   renderPlatformPlans = () => {
@@ -164,29 +264,37 @@ class App extends Component {
                         }
                       )}
                     </div>
-                  ) : null}
+                  ) : (
+                    <div>
+                      Resources not yet provisioned - please complete the
+                      required settings!
+                    </div>
+                  )}
                 </div>
                 <div>{profile?.customer?.email}</div>
               </div>
             )}
             {profile && (
               <div className="logout">
-                <button
-                  className="plain"
-                  onClick={() => {
-                    // TODO logout route
-                    Cookies.remove("kubesail-platform-customer");
-                  }}
-                >
-                  Log out
-                </button>
+                <a href={`${API_TARGET}/platform/customer/logout`}>Log out</a>
               </div>
             )}
           </div>
           <div className="App-form">
             {profile &&
-            platform &&
-            profile.customer.platformPlans.length > 0 ? (
+            this.state.progress < 100 &&
+            this.state.resources.length > 0 ? (
+              <div className="progress">
+                <div>
+                  <ProgressCircle percent={this.state.progress} />
+                </div>
+                <div className="progress-message">
+                  {this.state.progressMessage}
+                </div>
+              </div>
+            ) : profile &&
+              platform &&
+              profile.customer.platformPlans.length > 0 ? (
               <Settings
                 platform={platform}
                 profile={profile}

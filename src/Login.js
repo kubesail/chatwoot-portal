@@ -33,9 +33,13 @@ function Login({ setLoggedIn, platform }) {
   return (
     <div className="Login">
       {action === "login" ? (
-        <h2>Login to your account</h2>
+        <div>
+          <h2>Login to your account</h2>
+        </div>
       ) : (
-        <h2>Create a {platform?.name} Account</h2>
+        <div>
+          <h2>Create an Account</h2>
+        </div>
       )}
       <form
         onSubmit={(e) => {
@@ -83,12 +87,12 @@ function Login({ setLoggedIn, platform }) {
           </button>
         </div>
       </form>
-      <div>
+      <div className="note">
         {action === "register"
           ? "Already have an account?"
           : "Need an account?"}
         <button
-          className="plain underline"
+          className="plain"
           onClick={() => {
             setFieldError("");
             setFormError("");
