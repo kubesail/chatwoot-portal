@@ -15,9 +15,7 @@ class App extends Component {
     platform: null,
   };
 
-  createSocket = (force = false) => {
-    if (window.__EVENTSTREAM && !force) return window.__EVENTSTREAM;
-
+  createSocket = () => {
     let target = WSS_TARGET;
 
     try {
@@ -28,38 +26,31 @@ class App extends Component {
       }
     } catch {}
 
-    window.__EVENTSTREAM = socketioClient(target, {
+    this.socket = socketioClient(target, {
       timeout: 5000,
       reconnectionDelayMax: 3000,
       secure: true,
     });
 
-    window.__EVENTSTREAM.on("error", (err) => {
-      if (err === "Unauthorized") {
-        console.error("Unauthorized received from Websocket!", { err });
-        toast({
-          type: "error",
-          msg: `Failed to connect to websocket - logging out!`,
-          err,
-        });
-      } else if (err.type !== "TransportError") {
+    this.socket.on("error", (err) => {
+      if (err.type !== "TransportError") {
         console.error("Unknown error!", err);
       }
     });
 
-    window.__EVENTSTREAM.on("connect", () => {
+    this.socket.on("connect", () => {
       console.log("Socket connected");
     });
 
-    window.__EVENTSTREAM.on("connect_error", (error) => {
+    this.socket.on("connect_error", (error) => {
       console.warn("Socket connection error!", error);
     });
 
-    window.__EVENTSTREAM.on("connect_timeout", (timeout) => {
+    this.socket.on("connect_timeout", (timeout) => {
       console.warn("Socket connection timeout!", timeout);
     });
 
-    return window.__EVENTSTREAM;
+    return this.socket;
   };
 
   fetchProfile = async () => {
@@ -77,6 +68,18 @@ class App extends Component {
       return;
     }
     this.setState({ profile: json });
+
+    const socket = this.createSocket();
+
+    if (json?.customer?.platformCustomerPlanTemplates) {
+      console.log("watch-resources");
+      socket.emit("watch-resources");
+    }
+
+    socket.on("resource-event", (event) => {
+      console.log("resource-event", event);
+    });
+
     return json;
   };
 
@@ -104,10 +107,7 @@ class App extends Component {
 
   componentDidMount = async () => {
     await this.fetchPublicPlatform();
-    const profile = await this.fetchProfile();
-    if (profile) {
-      this.createSocket();
-    }
+    await this.fetchProfile();
   };
 
   renderPlatformPlans = () => {
@@ -220,7 +220,12 @@ class App extends Component {
                         }
                       )}
                     </div>
-                  ) : null}
+                  ) : (
+                    <div>
+                      Resources not yet provisioned - please complete the
+                      required settings!
+                    </div>
+                  )}
                 </div>
                 <div>{profile?.customer?.email}</div>
               </div>
