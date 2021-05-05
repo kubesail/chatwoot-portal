@@ -42,9 +42,9 @@ class App extends Component {
       }
     });
 
-    this.socket.on("connect", () => {
-      console.log("Socket connected");
-    });
+    // this.socket.on("connect", () => {
+    //   console.log("Socket connected");
+    // });
 
     this.socket.on("connect_error", (error) => {
       console.warn("Socket connection error!", error);
@@ -198,11 +198,6 @@ class App extends Component {
 
   render() {
     const { platform, profile } = this.state;
-    console.log(
-      "this.state.progress",
-      this.state.progress,
-      this.state.resources.length
-    );
     return (
       <div className="App-container">
         <Helmet>
