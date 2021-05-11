@@ -26,7 +26,7 @@ export default function ProgressCircle({
         className="ProgressCircle-percent"
         style={{ backgroundImage: `url(${thumbnail})` }}
       >
-        {percent}%
+        {Math.round(percent)}%
       </div>
       <svg width="200" height="200" viewport="0 0 100 100">
         <circle
