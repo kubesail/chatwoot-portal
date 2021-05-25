@@ -1,1 +1,1 @@
-/api/*            https://api.kubesail.com/:splat
+/api/* https://api.kubesail.com/:splat 200
