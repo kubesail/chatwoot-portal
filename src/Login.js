@@ -17,7 +17,7 @@ function Login({ setLoggedIn, platform }) {
     else setFieldError("");
 
     setLoggingIn(true);
-    const { status, json } = await fetch(
+    const { json } = await fetch(
       `/platform/customer/${register ? "register" : "login"}`,
       { method: "POST", body: { email, password } }
     );
