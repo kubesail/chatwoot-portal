@@ -1,1 +1,1 @@
-/api            https://api.kubesail.com
+/api/*            https://api.kubesail.com
