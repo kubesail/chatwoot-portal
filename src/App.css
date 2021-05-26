@@ -4,10 +4,16 @@
   animation-delay: 0.2s;
   animation-fill-mode: backwards;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
-  max-width: 920px;
+  max-width: 720px;
   width: 100%;
+}
+
+.hero {
+  color: rgb(31, 45, 61);
+  font-size: 28px;
+  padding: 40px 0;
 }
 
 .App-container {
@@ -21,17 +27,6 @@
   right: 0;
   left: 0;
   z-index: -1;
-}
-.App-container:before {
-  height: 100%;
-  width: 50%;
-  background: #fff;
-  position: fixed;
-  content: " ";
-  top: 0;
-  right: 0;
-  animation-fill-mode: both;
-  transform-origin: right;
 }
 
 .App-logo {
@@ -52,8 +47,11 @@
   justify-content: center;
   font-size: 22px;
   color: white;
-  width: 50%;
+  width: 100%;
   font-weight: bold;
+  font-size: 34px;
+  font-weight: 300;
+  margin-top: 50px;
 }
 
 .App-header .profile {
@@ -75,9 +73,20 @@
   margin-top: 20px;
 }
 
+.App-toolbar {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
 .App-form {
-  padding: 60px;
-  width: 50%;
+  padding: 20px;
+  width: 100%;
+  background: white;
+  border: 1px solid #e0e6ed;
+  border-radius: 8px;
+  box-shadow: 0 0.8rem 1.6rem rgb(50 50 93 / 8%),
+    0 0.4rem 1.2rem rgb(0 0 0 / 7%);
 }
 
 .App-form .input {
@@ -132,12 +141,6 @@
   margin: 50px;
 }
 
-@media only screen and (min-width: 992px) {
-  .App {
-    align-items: flex-start;
-    transform: translateY(max(48px, calc(50vh - 55%)));
-  }
-}
 @media only screen and (max-width: 992px) {
   .App {
     flex-direction: column;

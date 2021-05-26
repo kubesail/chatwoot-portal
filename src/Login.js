@@ -48,30 +48,30 @@ function Login({ setLoggedIn, platform }) {
         }}
       >
         <div className="input">
-          <input
-            type="text"
-            name="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={fieldError === "email" ? "error" : ""}
-          />
-          <label htmlFor="password" className="input-label">
-            Password
+          <label className="input-label">
+            <span>Email</span>
+            <input
+              type="text"
+              name="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={fieldError === "email" ? "error" : ""}
+            />
           </label>
         </div>
         <div className="input">
-          <input
-            id="password"
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={fieldError === "password" ? "error" : ""}
-          />
-          <label htmlFor="password" className="input-label">
-            Password
+          <label className="input-label">
+            <span>Password</span>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={fieldError === "password" ? "error" : ""}
+            />
           </label>
         </div>
 

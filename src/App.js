@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { Component } from "react";
 import socketioClient from "socket.io-client";
 import { loadStripe } from "@stripe/stripe-js";
+import logo from "./logo.svg";
 import "./App.css";
 import Login from "./Login";
 import Settings from "./Settings";
@@ -201,15 +202,6 @@ class App extends Component {
     return (
       <div className="App-container">
         <Helmet>
-          {/* <link rel="canonical" href="https://kubesail.com" />
-          <meta property="og:title" content="KubeSail" />
-          <meta
-          property="og:description"
-          content="Host apps at Home (or anywhere) with Kubernetes and KubeSail!"
-          />
-          <meta property="og:site_name" content="KubeSail.com" />
-          <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://kubesail.com/" /> */}
           <meta property="og:image:type" content="image/png" />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="1200" />
@@ -217,69 +209,61 @@ class App extends Component {
           <title>{platform?.name || ""} Customer Portal</title>
           <link rel="icon" href={platform?.logo || "/favicon.ico"} />
         </Helmet>
-        <div
-          className="App-background"
-          style={{ backgroundColor: platform?.brandColor || "#282c34" }}
-        />
         <div className="App">
           <div className="App-header">
-            <h1>{platform ? platform.name : "Loading..."}</h1>
-            {platform && (
-              <img
-                style={{ maxWidth: "250px", maxHeight: "250px" }}
-                alt={`${platform.name}`}
-                src={platform.logo}
-              />
-            )}
-            {profile && (
-              <div className="profile">
-                <div>
-                  {profile?.customer?.platformCustomerPlanTemplates ? (
-                    <div>
-                      {profile.customer.platformCustomerPlanTemplates.find(
-                        (t) => t.errors
-                      ) ? (
-                        <div className="errors">
-                          There was an error setting up your resources.
-                          <br />
-                          Please contact support!
-                        </div>
-                      ) : null}
-                      {profile.customer.platformCustomerPlanTemplates.map(
-                        (template) => {
-                          return (template.dnsName || "")
-                            .split(",")
-                            .map((domain) => {
-                              return (
-                                <a
-                                  key={domain}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  href={`https://${domain}`}
-                                >
-                                  {domain}
-                                </a>
-                              );
-                            });
-                        }
-                      )}
-                    </div>
-                  ) : (
-                    <div>
-                      Resources not yet provisioned - please complete the
-                      required settings!
-                    </div>
-                  )}
+            <div className="App-toolbar">
+              <img src={logo} style={{ width: 180 }} />
+              {profile && (
+                <div className="profile">
+                  <div>
+                    {profile?.customer?.platformCustomerPlanTemplates ? (
+                      <div>
+                        {profile.customer.platformCustomerPlanTemplates.find(
+                          (t) => t.errors
+                        ) ? (
+                          <div className="errors">
+                            There was an error setting up your resources.
+                            <br />
+                            Please contact support!
+                          </div>
+                        ) : null}
+                        {profile.customer.platformCustomerPlanTemplates.map(
+                          (template) => {
+                            return (template.dnsName || "")
+                              .split(",")
+                              .map((domain) => {
+                                return (
+                                  <a
+                                    key={domain}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    href={`https://${domain}`}
+                                  >
+                                    {domain}
+                                  </a>
+                                );
+                              });
+                          }
+                        )}
+                      </div>
+                    ) : (
+                      <div>
+                        Resources not yet provisioned - please complete the
+                        required settings!
+                      </div>
+                    )}
+                  </div>
+                  <div>{profile?.customer?.email}</div>
                 </div>
-                <div>{profile?.customer?.email}</div>
-              </div>
-            )}
+              )}
+            </div>
             {profile && (
               <div className="logout">
                 <a href={`${API_TARGET}/platform/customer/logout`}>Log out</a>
               </div>
             )}
           </div>
+          <h2 className="hero">Howdy! Manage your Chatwoot instance here 👋</h2>
           <div className="App-form">
             {profile &&
             this.state.progress < 100 &&
