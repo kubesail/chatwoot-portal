@@ -212,7 +212,7 @@ class App extends Component {
         <div className="App">
           <div className="App-header">
             <div className="App-toolbar">
-              <img src={logo} style={{ width: 180 }} />
+              <img src={logo} style={{ width: 180 }} alt="logo" />
               {profile && (
                 <div className="profile">
                   <div>
