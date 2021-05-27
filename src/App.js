@@ -232,7 +232,7 @@ class App extends Component {
               </div>
             </div>
             <h2 className="hero">
-              Howdy! Manage your Chatwoot instance here 👋
+              Howdy! Manage your Chatwoot installation here 👋
             </h2>
             {profile && (
               <div>
