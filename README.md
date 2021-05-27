@@ -4,4 +4,6 @@ See the [KubeSail Docs](https://docs.kubesail.com/platform/) for more info. This
 
 # Deploying this portal
 
-This repo can easily be deployed to Netlify, and includes a `_redirects` file which instructs Netlify to proxy API requests to KubeSail. Simply fork this repo, and select the default `yarn build` command when setting up your deployment.
+This repo can easily be deployed to Netlify, and includes a `public/_redirects` file which instructs Netlify to proxy API requests to KubeSail. Simply fork this repo, and select the default `yarn build` command when setting up your deployment. For KubeSail API features to work correctly, make sure you set the "Portal Domain" to the domain of where you will host this repo.
+
+![Portal Domain](kubesail-dash-portal-domain.png)
