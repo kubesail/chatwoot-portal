@@ -70,6 +70,8 @@
   font-size: 1.2rem;
   margin-left: 15px;
   text-decoration: underline;
+  color: #007ef3;
+  cursor: pointer;
 }
 
 .App-header .logout a {

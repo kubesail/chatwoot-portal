@@ -225,8 +225,8 @@ class App extends Component {
                   </div>
                 )}
                 {profile && (
-                  <div className="logout">
-                    <a onClick={this.logout}>Log out</a>
+                  <div className="logout" onClick={this.logout}>
+                    Log Out
                   </div>
                 )}
               </div>
