@@ -54,40 +54,36 @@ a {
 
 .input {
   position: relative;
-  margin: 20px;
 }
 
 button {
   padding: none;
   border: none;
   cursor: pointer;
-  margin: 10px auto;
   background-color: #007ef3;
   color: white;
   height: 4.8rem;
   font-size: 1.8rem;
   font-weight: 500;
+  width: 100%;
+  padding: var(--input-padding);
+  border: none;
+  margin-top: 20px;
+  border-radius: var(--input-border-radius);
 }
-
 button.plain {
   background-color: unset;
   color: unset;
+  display: inline;
+  width: unset;
 }
 button.underline {
   text-decoration: underline;
 }
 
-button.button {
-  padding: var(--input-padding);
-  border: none;
-  width: 100%;
-  max-width: 280px;
-  margin: 20px;
-  border-radius: var(--input-border-radius);
-}
-
 .form-error {
   color: red;
+  font-size: 1.2rem;
 }
 
 .Login input.error {

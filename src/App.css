@@ -46,7 +46,6 @@
   align-items: center;
   justify-content: center;
   font-size: 22px;
-  color: white;
   width: 100%;
   font-weight: bold;
   font-size: 34px;
@@ -55,18 +54,32 @@
 }
 
 .App-header .profile {
+  display: flex;
+  align-items: center;
   margin-top: 20px;
-  font-size: 14px;
-  color: #ebeef5;
+  font-size: 1.4rem;
+  font-weight: 500;
   line-height: 1.6rem;
-}
-
-.App-header .profile a {
-  color: #ebeef5;
 }
 
 .App-header .profile .errors {
   color: red;
+}
+
+.App-header .logout {
+  font-size: 1.2rem;
+  margin-left: 15px;
+  text-decoration: underline;
+}
+
+.App-header .logout a {
+  border-radius: 3px;
+}
+
+.App-header .resource-status {
+  font-size: 1.6rem;
+  font-weight: normal;
+  padding: 0px 0 40px 0;
 }
 
 .App-header img {
@@ -78,9 +91,23 @@
   width: 100%;
   justify-content: space-between;
 }
+.spinner {
+  height: 24px;
+  animation: spin 4s infinite linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 .App-form {
-  padding: 20px;
+  padding: 40px;
+  margin-bottom: 80px;
   width: 100%;
   background: white;
   border: 1px solid #e0e6ed;
@@ -105,6 +132,7 @@
   display: flex;
   cursor: pointer;
   line-height: 32px;
+  font-size: 1.4rem;
 }
 .App-plan:hover {
   box-shadow: var(--box-shadow);
@@ -115,16 +143,6 @@
 .App-plan-icon {
   width: 30px;
   margin-left: auto;
-}
-
-.logout {
-  font-size: 12px;
-  margin-top: 20px;
-}
-.logout a {
-  border-radius: 3px;
-  color: #ebeef5;
-  text-decoration: none;
 }
 
 .Settings h2 {

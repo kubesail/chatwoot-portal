@@ -20,6 +20,11 @@ class App extends Component {
     resources: [],
   };
 
+  logout = async () => {
+    await fetch(`/platform/customer/logout`, { method: "POST" });
+    window.location.reload();
+  };
+
   createSocket = () => {
     let target = WSS_TARGET;
 
@@ -213,20 +218,38 @@ class App extends Component {
           <div className="App-header">
             <div className="App-toolbar">
               <img src={logo} style={{ width: 180 }} alt="logo" />
-              {profile && (
-                <div className="profile">
+              <div className="profile">
+                {profile && (
                   <div>
-                    {profile?.customer?.platformCustomerPlanTemplates ? (
-                      <div>
-                        {profile.customer.platformCustomerPlanTemplates.find(
-                          (t) => t.errors
-                        ) ? (
-                          <div className="errors">
-                            There was an error setting up your resources.
-                            <br />
-                            Please contact support!
-                          </div>
-                        ) : null}
+                    <div>{profile?.customer?.email}</div>
+                  </div>
+                )}
+                {profile && (
+                  <div className="logout">
+                    <a onClick={this.logout}>Log out</a>
+                  </div>
+                )}
+              </div>
+            </div>
+            <h2 className="hero">
+              Howdy! Manage your Chatwoot instance here 👋
+            </h2>
+            {profile && (
+              <div>
+                {profile?.customer?.platformCustomerPlanTemplates ? (
+                  <div>
+                    {profile.customer.platformCustomerPlanTemplates.find(
+                      (t) => t.errors
+                    ) ? (
+                      <div className="errors">
+                        There was an error setting up your resources.
+                        <br />
+                        Please contact support!
+                      </div>
+                    ) : null}
+                    {profile.customer.platformCustomerPlanTemplates.length >
+                      0 && (
+                      <div className="resource-status">
                         {profile.customer.platformCustomerPlanTemplates.map(
                           (template) => {
                             return (template.dnsName || "")
@@ -244,26 +267,19 @@ class App extends Component {
                                 );
                               });
                           }
-                        )}
-                      </div>
-                    ) : (
-                      <div>
-                        Resources not yet provisioned - please complete the
-                        required settings!
+                        )}{" "}
                       </div>
                     )}
                   </div>
-                  <div>{profile?.customer?.email}</div>
-                </div>
-              )}
-            </div>
-            {profile && (
-              <div className="logout">
-                <a href={`${API_TARGET}/platform/customer/logout`}>Log out</a>
+                ) : (
+                  <div className="resource-status">
+                    Resources not yet provisioned - please complete the required
+                    settings
+                  </div>
+                )}
               </div>
             )}
           </div>
-          <h2 className="hero">Howdy! Manage your Chatwoot instance here 👋</h2>
           <div className="App-form">
             {profile &&
             this.state.progress < 100 &&
