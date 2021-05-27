@@ -8,7 +8,7 @@ import "./App.css";
 import Login from "./Login";
 import Settings from "./Settings";
 import { fetch, toast } from "./util";
-import { API_TARGET, WSS_TARGET } from "./config";
+import { WSS_TARGET } from "./config";
 import ProgressCircle from "./ProgressCircle";
 
 class App extends Component {
